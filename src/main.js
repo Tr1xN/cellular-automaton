@@ -3,19 +3,18 @@ import gameOfLife from './gameOfLife.js';
 import logUpdate from 'log-update';
 import boxen from 'boxen';
 
-let world1 = new gameOfLife(5, 5);
+let world = new gameOfLife(10, 10);
 
 
-world1.cells[2][2] = true;
-world1.cells[2][3] = true;
-world1.cells[2][4] = true;
+// world.cells[3][1].setState(true);
+// world.cells[3][2].setState(true);
+// world.cells[3][3].setState(true);
+// world.cells[2][3].setState(true);
+// world.cells[1][2].setState(true);
+
+logUpdate(boxen(world.print(), {borderColor: 'green'}));
 
 setInterval(() => {
-    world1.fill(true);
-	logUpdate(`${boxen(world1.print(true), {borderColor: 'green', borderStyle: 'round'})}\n${world1.countNeighbors(0,1)}\n${world1.cells[0][1]}`);
-}, 1000/5);
-
-// setInterval(() => {
-// 	logUpdate(`${boxen(world1.print({debug: true}), {borderColor: 'green', borderStyle: 'round'})}\n${world1.countNeighbors(0,1)}\n${world1.cells[0][1]}`);
-//     world1.step();
-// }, 100);
+	logUpdate(boxen(world.print(), {borderColor: 'green'}));
+    world.step();
+}, 1000/120);

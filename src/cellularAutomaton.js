@@ -1,65 +1,56 @@
 import chalk from 'chalk';
+import cell from './cell.js';
 export default class cellularAutomaton {
-    constructor(width = 20, height = 10) {
+    constructor(width = 10, height = 10, state = false) {
         this.width = width;
         this.height = height;
-        this.init(width, height);
+        this.init(width, height, state);
+        console.log(this.cells);
     }
 
-    init(width, height) {
-        this.cells = Array(height).fill(null).map(() => Array(width).fill(false));
+    init(width, height, state = false) {
+        this.cell = Array(height).fill(null).map(() => Array(width).fill(new cell(state)));
     }
 
-    fill(state = false){
-        for (let row in this.cells) {
-            for (let col in this.cells[row]) {
-                this.cells[row][col] = state;
-            }
-        }
-    }
-
-    randomize(frequency) {
-        this.fill()
-        for (let row in this.cells) {
-            for (let col in this.cells[row]) {
-                if (Math.random() < frequency)
-                    this.cells[row][col] = !this.cells[row][col];
-            }
-        }
+    randomize(probability = 0.5) {
+        this.cells.map(row => row.map(cell => cell.setState(Math.random() < probability)));
+        // for (let row = 0; row < this.height; row++) {
+        //     for (let col = 0; col < this.width; col++) {
+        //         this.cells[row][col].setState(Math.random() < probability);
+        //     }
+        // }
     }
 
     inverse() {
-        for (let row in this.cells) {
-            for (let col in this.cells[row]) {
-                this.cells[row][col] = !this.cells[row][col];
-            }
-        }
+        this.cells.map(row => row.map(cell => cell.setState(!cell.getState())));
+        // for (let row = 0; row < this.height; row++) {
+        //     for (let col = 0; col < this.width; col++) {
+        //         this.cells[row][col].setState(!this.cells[row][col].getState());
+        //     }
+        // }
     }
 
     print(debug) {
         let output = '';
-        for (let row in this.cells) {
-            for (let col in this.cells[row]) {
-                if(debug)                
-                    output += this.cells[row][col] ? chalk.whiteBright.bgGreen(this.countNeighbors(row, col)+' ') : this.countNeighbors(row, col)+' ';
+        this.cells.map(row => {
+            row.map(cell => {
+                if (debug)
+                    output += cell.getState() ? chalk.whiteBright.bgGreen(cell.getNeighbors() + ' ') : cell.getNeighbors() + ' ';
                 else
-                    output += this.cells[row][col] ? chalk.whiteBright.bgGreen('  ') : '  ';
-            }
+                    output += cell.getState() ? chalk.whiteBright.bgGreen('  ') : '  ';
+            });
             output += '\n';
-        }
-        return(output.slice(0, -1));
+        });
+        // for (let row = 0; row < this.height; row++) {
+        //     for (let col = 0; col < this.width; col++) {
+        //         if (debug)
+        //             output += this.cells[row][col] ? chalk.whiteBright.bgGreen(this.countNeighbors(row, col) + ' ') : this.countNeighbors(row, col) + ' ';
+        //         else
+        //             output += this.cells[row][col] ? chalk.whiteBright.bgGreen('  ') : '  ';
+        //     }
+        //     output += '\n';
+        // }
+        return (output.slice(0, -1));
     }
 
-    countNeighbors(row, col) {
-        let count = 0;
-        for (let i = row - 1; i <= row + 1; i++) {
-            for (let j = col - 1; j <= col + 1; j++) {
-                if (i >= 0 && i < this.height && j >= 0 && j < this.width && !(i == row && j == col) && this.cells[i][j]) {
-                    count++;
-                }
-            }
-        }
-        return(count);
-    }
 }
-
