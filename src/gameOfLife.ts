@@ -13,23 +13,35 @@ export default class gameOfLife extends cellularAutomaton {
         this.delta = [{ x: -1, y: -1 }, { x: -1, y: 0 }, { x: -1, y: 1 }, { x: 0, y: -1 }, { x: 0, y: 1 }, { x: 1, y: -1 }, { x: 1, y: 0 }, { x: 1, y: 1 }];
     }
 
+    setCellState(row: number, col: number, state: boolean) {
+        this.cells[row][col].setState(state);
+        this.updateNeighbors(row, col, this.delta);
+    }
+
+    setMap(map: number[][]) {
+        if (map.length != this.height || map[0].length != this.width) {
+            throw new Error(`Map size does not match. Expected ${this.width}x${this.height}, got ${map.length}x${map[0].length}`);
+        }
+        for (let row = 0; row < this.height; row++) {
+            for (let col = 0; col < this.width; col++) {
+                if (map[row][col] == 1)
+                    this.setCellState(row, col, true);
+            }
+        }
+    }
+
     step() {
         let oldCells = this.cells;
         this.cells = this.init(this.width, this.height, false);
         for (let row = 0; row < this.height; row++) {
             for (let col = 0; col < this.width; col++) {
-                if (oldCells[row][col] && oldCells[row][col].getNeighbors() == 0) {
+                if (oldCells[row][col].getState() && oldCells[row][col].getNeighbors() == 0) {
                     continue;
                 }
                 let aliveNeighbors = oldCells[row][col].getNeighbors();
-                if (!oldCells[row][col] && aliveNeighbors == 3) {
-                    this.cells[row][col].setState(true);
-                    this.updateNeighbors(row, col, this.delta);
+                if ((!oldCells[row][col].getState() && aliveNeighbors == 3) || (oldCells[row][col].getState() && (aliveNeighbors == 2 || aliveNeighbors == 3))) {
+                    this.setCellState(row, col, true);
                 }
-                if (oldCells[row][col] && (aliveNeighbors == 2 || aliveNeighbors == 3)) {
-                    this.cells[row][col].setState(true);
-                }
-
             }
         }
     }

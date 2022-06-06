@@ -21,7 +21,7 @@ export default class cellularAutomaton {
         return new Array(height).fill(null).map(() => new Array(width).fill(null).map(() => new cell(state)));
     }
 
-    protected updateNeighbors(row: number, col: number, delta: coords[]) {
+    updateNeighbors(row: number, col: number, delta: coords[]) {
         delta.map(delta => {
             let x = ((row + delta.x) % this.width + this.width) % this.width;
             let y = ((col + delta.y) % this.height + this.height) % this.height;
