@@ -14,69 +14,50 @@ export default class gameOfLife extends cellularAutomaton {
     }
 
     step() {
-        let old = this.cells;
-        this.cells = this.init();
-        old.map((row, rowIndex) => {
-            row.map((cell, colIndex) => {
-                let neighbors = cell.getNeighbors();
-                if (cell.getState()) {
-                    if (neighbors < 2 || neighbors > 3) {
-                        this.cells[rowIndex][colIndex].setState(false);
-                        this.delta.map(delta => {
-                            let x = ((rowIndex + delta.x) % this.width + this.width) % this.width;
-                            let y = ((colIndex + delta.y) % this.height + this.height) % this.height;
-                            this.cells[x][y].decreaseNeighbors(1);
-                        });
+        let newCells = this.init(this.width, this.height, false);
+        for (let row = 0; row < this.height; row++) {
+            for (let col = 0; col < this.width; col++) {
+                let aliveNeighbors = this.cells[row][col].getNeighbors();
+                if (this.cells[row][col]) {
+                    if (aliveNeighbors < 2 || aliveNeighbors > 3){
+                        newCells[row][col].setState(false);
+                        this.updateNeighbors(row, col, this.delta);
                     }
-                }
-                else {
-                    if (neighbors === 3) {
-                        this.cells[rowIndex][colIndex].setState(true);
-                        this.delta.map(delta => {
-                            let x = ((rowIndex + delta.x) % this.width + this.width) % this.width;
-                            let y = ((colIndex + delta.y) % this.height + this.height) % this.height;
-                            this.cells[x][y].increaseNeighbors(1);
-                        });
+                    else
+                        newCells[row][col].setState(true);
+                } else {
+                    if (aliveNeighbors == 3){
+                        newCells[row][col].setState(true);
+                        this.updateNeighbors(row, col, this.delta);
                     }
+                    else
+                        newCells[row][col].setState(false);
                 }
-            });
-        });
-        // for (let row = 0; row < this.height; row++) {
-        //     for (let col = 0; col < this.width; col++) {
-        //         let neighbors = this.countNeighbors(row, col);
-        //         if (old[row][col].getState()) {
-        //             if (neighbors < 2 || neighbors > 3)
-        //                 this.cells[row][col].setState(false);
-        //             else
-        //                 this.cells[row][col].setState(true);
-        //         } else {
-        //             if (neighbors === 3)
-        //                 this.cells[row][col].setState(true);
-        //         }
-        //     }
-        // }
+            }
+        }
+        this.cells = newCells;
     }
 
-    randomize(probability = 0.5) {
-        // this.cells.map(row => row.map(cell => cell.setState(Math.random() < probability)));
+randomize(probability = 0.5) {
+    // this.cells.map(row => row.map(cell => cell.setState(Math.random() < probability)));
 
-        // for (let row = 0; row < this.height; row++) {
-        //     for (let col = 0; col < this.width; col++) {
-        //         this.cells[row][col].setState(Math.random() < probability);
-        //     }
-        // }
+    // for (let row = 0; row < this.height; row++) {
+    //     for (let col = 0; col < this.width; col++) {
+    //         this.cells[row][col].setState(Math.random() < probability);
+    //     }
+    // }
 
-        this.cells.map((row, rowIndex) => {
-            row.map((cell, colIndex) => {
-                if (Math.random() < probability) {
-                    this.cells[rowIndex][colIndex].changeState();
-                    this.delta.map(delta => {
-                        let x = ((rowIndex + delta.x) % this.width + this.width) % this.width;
-                        let y = ((colIndex + delta.y) % this.height + this.height) % this.height;
-                        this.cells[x][y].increaseNeighbors(1);
-                    });
-                }
-            });
+    this.cells.map((row, rowIndex) => {
+        row.map((cell, colIndex) => {
+            if (Math.random() < probability) {
+                this.cells[rowIndex][colIndex].changeState();
+                this.delta.map(delta => {
+                    let x = ((rowIndex + delta.x) % this.width + this.width) % this.width;
+                    let y = ((colIndex + delta.y) % this.height + this.height) % this.height;
+                    this.cells[x][y].increaseNeighbors(1);
+                });
+            }
         });
-    }
+    });
+}
 }

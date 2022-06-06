@@ -1,6 +1,11 @@
 import chalk from 'chalk';
 import cell from './cell.js';
 
+interface coords {
+    x: number;
+    y: number;
+}
+
 export default class cellularAutomaton {
     protected width: number;
     protected height: number;
@@ -16,13 +21,23 @@ export default class cellularAutomaton {
         return new Array(height).fill(null).map(() => new Array(width).fill(null).map(() => new cell(state)));
     }
 
+    updateNeighbors(row: number, col: number, delta: coords[] ) {
+        delta.map(delta => {
+            if(this.cells[row][col].getState()) {
+                let x = ((row + delta.x) % this.width + this.width) % this.width;
+                let y = ((col + delta.y) % this.height + this.height) % this.height;
+                this.cells[x][y].increaseNeighbors(1);
+            }
+            else{
+                let x = ((row + delta.x) % this.width + this.width) % this.width;
+                let y = ((col + delta.y) % this.height + this.height) % this.height;
+                this.cells[x][y].decreaseNeighbors(1);
+            }
+        });
+    }
+
     inverse() {
         this.cells.map(row => row.map(cell => cell.changeState()));
-        // for (let row = 0; row < this.height; row++) {
-        //     for (let col = 0; col < this.width; col++) {
-        //         this.cells[row][col].setState(!this.cells[row][col].getState());
-        //     }
-        // }
     }
 
     print(debug: boolean = false) {
@@ -36,15 +51,6 @@ export default class cellularAutomaton {
             });
             output += '\n';
         });
-        // for (let row = 0; row < this.height; row++) {
-        //     for (let col = 0; col < this.width; col++) {
-        //         if (debug)
-        //             output += this.cells[row][col] ? chalk.whiteBright.bgGreen(this.countNeighbors(row, col) + ' ') : this.countNeighbors(row, col) + ' ';
-        //         else
-        //             output += this.cells[row][col] ? chalk.whiteBright.bgGreen('  ') : '  ';
-        //     }
-        //     output += '\n';
-        // }
         return (output.slice(0, -1));
     }
 

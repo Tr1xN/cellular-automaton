@@ -12,13 +12,22 @@ export default class cellularAutomaton {
     init(width = this.width, height = this.height, state = false) {
         return new Array(height).fill(null).map(() => new Array(width).fill(null).map(() => new cell(state)));
     }
+    updateNeighbors(row, col, delta) {
+        delta.map(delta => {
+            if (this.cells[row][col].getState()) {
+                let x = ((row + delta.x) % this.width + this.width) % this.width;
+                let y = ((col + delta.y) % this.height + this.height) % this.height;
+                this.cells[x][y].increaseNeighbors(1);
+            }
+            else {
+                let x = ((row + delta.x) % this.width + this.width) % this.width;
+                let y = ((col + delta.y) % this.height + this.height) % this.height;
+                this.cells[x][y].decreaseNeighbors(1);
+            }
+        });
+    }
     inverse() {
         this.cells.map(row => row.map(cell => cell.changeState()));
-        // for (let row = 0; row < this.height; row++) {
-        //     for (let col = 0; col < this.width; col++) {
-        //         this.cells[row][col].setState(!this.cells[row][col].getState());
-        //     }
-        // }
     }
     print(debug = false) {
         let output = '';
@@ -31,15 +40,6 @@ export default class cellularAutomaton {
             });
             output += '\n';
         });
-        // for (let row = 0; row < this.height; row++) {
-        //     for (let col = 0; col < this.width; col++) {
-        //         if (debug)
-        //             output += this.cells[row][col] ? chalk.whiteBright.bgGreen(this.countNeighbors(row, col) + ' ') : this.countNeighbors(row, col) + ' ';
-        //         else
-        //             output += this.cells[row][col] ? chalk.whiteBright.bgGreen('  ') : '  ';
-        //     }
-        //     output += '\n';
-        // }
         return (output.slice(0, -1));
     }
 }

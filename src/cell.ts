@@ -1,6 +1,6 @@
 export default class cell {
     private state: boolean;
-    private neighbors: number = 0;
+    private alive_neighbors: number = 0;
 
     constructor(state = false) {
         this.state = state;
@@ -11,7 +11,7 @@ export default class cell {
     }
 
     getNeighbors() {
-        return this.neighbors;
+        return this.alive_neighbors;
     }
 
     changeState() {
@@ -23,12 +23,10 @@ export default class cell {
     }
 
     increaseNeighbors(amount: number) {
-        this.neighbors += amount;
+        this.alive_neighbors += amount;
     }
 
     decreaseNeighbors(amount: number) {
-        this.neighbors -= amount;
-        if (this.neighbors < 0)
-            this.neighbors = 0;
+        this.alive_neighbors -= amount;
     }
 }
