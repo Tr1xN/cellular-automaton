@@ -1,28 +1,23 @@
 import chalk from 'chalk';
 import cell from './cell.js';
+
 export default class cellularAutomaton {
-    constructor(width = 10, height = 10, state = false) {
+    protected width: number;
+    protected height: number;
+    cells: cell[][];
+
+    constructor(width: number = 10, height: number = 10, state: boolean = false) {
         this.width = width;
         this.height = height;
-        this.init(width, height, state);
-        console.log(this.cells);
+        this.cells = this.init(width, height, state);
     }
 
-    init(width, height, state = false) {
-        this.cell = Array(height).fill(null).map(() => Array(width).fill(new cell(state)));
-    }
-
-    randomize(probability = 0.5) {
-        this.cells.map(row => row.map(cell => cell.setState(Math.random() < probability)));
-        // for (let row = 0; row < this.height; row++) {
-        //     for (let col = 0; col < this.width; col++) {
-        //         this.cells[row][col].setState(Math.random() < probability);
-        //     }
-        // }
+    protected init(width: number = this.width, height: number = this.height, state: boolean = false) {
+        return new Array(height).fill(null).map(() => new Array(width).fill(null).map(() => new cell(state)));
     }
 
     inverse() {
-        this.cells.map(row => row.map(cell => cell.setState(!cell.getState())));
+        this.cells.map(row => row.map(cell => cell.changeState()));
         // for (let row = 0; row < this.height; row++) {
         //     for (let col = 0; col < this.width; col++) {
         //         this.cells[row][col].setState(!this.cells[row][col].getState());
@@ -30,7 +25,7 @@ export default class cellularAutomaton {
         // }
     }
 
-    print(debug) {
+    print(debug: boolean = false) {
         let output = '';
         this.cells.map(row => {
             row.map(cell => {
