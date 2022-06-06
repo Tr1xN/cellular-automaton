@@ -21,18 +21,11 @@ export default class cellularAutomaton {
         return new Array(height).fill(null).map(() => new Array(width).fill(null).map(() => new cell(state)));
     }
 
-    updateNeighbors(row: number, col: number, delta: coords[] ) {
+    protected updateNeighbors(row: number, col: number, delta: coords[]) {
         delta.map(delta => {
-            if(this.cells[row][col].getState()) {
-                let x = ((row + delta.x) % this.width + this.width) % this.width;
-                let y = ((col + delta.y) % this.height + this.height) % this.height;
-                this.cells[x][y].increaseNeighbors(1);
-            }
-            else{
-                let x = ((row + delta.x) % this.width + this.width) % this.width;
-                let y = ((col + delta.y) % this.height + this.height) % this.height;
-                this.cells[x][y].decreaseNeighbors(1);
-            }
+            let x = ((row + delta.x) % this.width + this.width) % this.width;
+            let y = ((col + delta.y) % this.height + this.height) % this.height;
+            this.cells[x][y].increaseNeighbors(1);
         });
     }
 

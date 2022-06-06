@@ -12,9 +12,14 @@ let world = new gameOfLife(10, 10);
 
 world.randomize(0.5);
 
-logUpdate(boxen(world.print(true), {borderColor: 'green'}));
+console.log(boxen(world.print(true), {borderColor: 'green'}));
+world.step();
+console.log(boxen(world.print(true), {borderColor: 'green'}));
+world.step();
+world.step();
+console.log(boxen(world.print(true), {borderColor: 'green'}));
 
-setInterval(() => {
-	logUpdate(boxen(world.print(true), {borderColor: 'green'}));
-    world.step();
-}, 1000/1);
+// setInterval(() => {
+// 	logUpdate(boxen(world.print(true), {borderColor: 'green'}));
+//     world.step();
+// }, 1000/1);

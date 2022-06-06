@@ -14,16 +14,9 @@ export default class cellularAutomaton {
     }
     updateNeighbors(row, col, delta) {
         delta.map(delta => {
-            if (this.cells[row][col].getState()) {
-                let x = ((row + delta.x) % this.width + this.width) % this.width;
-                let y = ((col + delta.y) % this.height + this.height) % this.height;
-                this.cells[x][y].increaseNeighbors(1);
-            }
-            else {
-                let x = ((row + delta.x) % this.width + this.width) % this.width;
-                let y = ((col + delta.y) % this.height + this.height) % this.height;
-                this.cells[x][y].decreaseNeighbors(1);
-            }
+            let x = ((row + delta.x) % this.width + this.width) % this.width;
+            let y = ((col + delta.y) % this.height + this.height) % this.height;
+            this.cells[x][y].increaseNeighbors(1);
         });
     }
     inverse() {
