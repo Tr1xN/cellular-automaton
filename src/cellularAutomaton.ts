@@ -25,7 +25,7 @@ export default class cellularAutomaton {
         delta.map(delta => {
             let x = ((row + delta.x) % this.width + this.width) % this.width;
             let y = ((col + delta.y) % this.height + this.height) % this.height;
-            this.cells[x][y].increaseNeighbors(1);
+            this.cells[y][x].increaseNeighbors(1);
         });
     }
 

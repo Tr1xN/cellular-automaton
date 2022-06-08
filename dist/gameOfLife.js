@@ -45,12 +45,6 @@ export default class gameOfLife extends cellularAutomaton {
         }
     }
     randomize(probability = 0.5) {
-        // this.cells.map(row => row.map(cell => cell.setState(Math.random() < probability)));
-        // for (let row = 0; row < this.height; row++) {
-        //     for (let col = 0; col < this.width; col++) {
-        //         this.cells[row][col].setState(Math.random() < probability);
-        //     }
-        // }
         this.cells.map((row, rowIndex) => {
             row.map((cell, colIndex) => {
                 if (Math.random() < probability) {
@@ -58,7 +52,7 @@ export default class gameOfLife extends cellularAutomaton {
                     this.delta.map(delta => {
                         let x = ((rowIndex + delta.x) % this.width + this.width) % this.width;
                         let y = ((colIndex + delta.y) % this.height + this.height) % this.height;
-                        this.cells[x][y].increaseNeighbors(1);
+                        this.cells[y][x].increaseNeighbors(1);
                     });
                 }
             });

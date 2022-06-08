@@ -63,7 +63,7 @@ export default class gameOfLife extends cellularAutomaton {
                     this.delta.map(delta => {
                         let x = ((rowIndex + delta.x) % this.width + this.width) % this.width;
                         let y = ((colIndex + delta.y) % this.height + this.height) % this.height;
-                        this.cells[x][y].increaseNeighbors(1);
+                        this.cells[y][x].increaseNeighbors(1);
                     });
                 }
             });
