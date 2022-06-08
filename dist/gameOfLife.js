@@ -9,13 +9,22 @@ export default class gameOfLife extends cellularAutomaton {
         this.cells[row][col].setState(state);
         this.updateNeighbors(row, col, this.delta);
     }
-    setMap(map) {
-        if (map.length != this.height || map[0].length != this.width) {
-            throw new Error(`Map size does not match. Expected ${this.width}x${this.height}, got ${map.length}x${map[0].length}`);
+    setPattern(pattern) {
+        let maxPatternWidth = 0;
+        let maxPatternHeight = pattern.length;
+        for (let row = 0; row < maxPatternHeight; row++) {
+            if (pattern[row].length > maxPatternWidth)
+                maxPatternWidth = pattern[row].length;
         }
-        for (let row = 0; row < this.height; row++) {
-            for (let col = 0; col < this.width; col++) {
-                if (map[row][col] == 1)
+        if (maxPatternHeight == 0 || maxPatternWidth == 0) {
+            throw new Error('Pattern is empty');
+        }
+        if (maxPatternHeight > this.height || maxPatternWidth > this.width) {
+            this.cells = this.init(maxPatternWidth, maxPatternHeight, false);
+        }
+        for (let row = 0; row < maxPatternHeight; row++) {
+            for (let col = 0; col < maxPatternWidth; col++) {
+                if (pattern[row][col] == 1)
                     this.setCellState(row, col, true);
             }
         }
